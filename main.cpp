@@ -18,13 +18,13 @@ void result(std::string& name, int& sp, std::vector<std::string>& tableName, std
         if (distance > 100)
         {
             distance = 100;
-            tableTime.push_back(time);
-            tableName.push_back(name);
         }
 
         m.lock();
         if (distance == 100)
         {
+            tableTime.push_back(time);
+            tableName.push_back(name);
             std::cout << name << " at the finish line!" << std::endl;
         }
 
@@ -63,7 +63,9 @@ int main() {
 
     for (int i = 0; i < 4; ++i)
     {
+        m.lock();
         t.push_back(std::thread(result, std::ref(nameList[i]), std::ref(speedList[i]), std::ref(tableName), std::ref(tableTime)));
+        m.unlock();
 
         std::this_thread::sleep_for(std::chrono::milliseconds(300));
     }
